@@ -5,11 +5,10 @@ import coseg
 #Global variables
 price_global="d"
 class cotizador():
-    def search(plate,id,flag_coseg,price,flag_cl):
+    def search(plate,id,flag_coseg,price,flag_cl,flag_c):
         if price=="":
             global price_global
-            price=info.info.crautos(plate,flag_cl)
-            print(f"El valor del auto es de: {price}")
+            price=info.info.crautos(plate,flag_cl,flag_c)
         if flag_coseg=="1":
             coseg.coseg.coseg(plate,id,price)
         else:
@@ -23,12 +22,14 @@ class cotizador():
         txt_price=Entry(root)
         flag_coseg=StringVar()
         flag_cl=StringVar()
-        price=StringVar()
+        flag_c=StringVar()
         chk_coseg=Checkbutton(root,text="Coseg",variable=flag_coseg, onvalue=1,offvalue=0)
         chk_cl=Checkbutton(root,text="CL",variable=flag_cl, onvalue=1,offvalue=0)
+        chk_c=Checkbutton(root,text="C",variable=flag_c, onvalue=1,offvalue=0)
         flag_coseg.set(0)
+        flag_c.set(0)
         flag_cl.set(0)
-        btn_buscar=Button(root,text="Cotizar",command=lambda:cotizador.search(txt_plate.get(),txt_id.get(),flag_coseg.get(),txt_price.get(),flag_cl.get()))
+        btn_buscar=Button(root,text="Cotizar",command=lambda:cotizador.search(txt_plate.get(),txt_id.get(),flag_coseg.get(),txt_price.get(),flag_cl.get(),flag_c.get()))
        
         #Mostrando
         Label(root,text="Cedula").pack()
@@ -39,6 +40,7 @@ class cotizador():
         txt_price.pack()
         chk_coseg.pack()
         chk_cl.pack()
+        chk_c.pack()
         btn_buscar.pack()
         root.mainloop()
 cotizador().UI()

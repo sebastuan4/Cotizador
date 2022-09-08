@@ -8,13 +8,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 import cleaning
 import time
 class info():
-    def crautos(plate,flag_cl):
-            caracteristicas=info.registro(plate,flag_cl)
+    def crautos(plate,flag_cl,flag_c):
+            caracteristicas=info.registro(plate,flag_cl,flag_c)
             url_crautos="https://crautos.com/bluebook/"
             driver=webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()))
             driver.get(url_crautos)
             driver.maximize_window()
-            time.sleep(3)
+            time.sleep(2)
             #Marca
             driver.find_element(by=By.XPATH,value='//select[@id="brand"]').click()
             driver.find_element(by=By.XPATH,value='//select[@id="brand"]').send_keys(caracteristicas[0])
@@ -34,7 +34,7 @@ class info():
             driver.find_element(by=By.XPATH,value='//select[@name="fuel"]').click()
             #Puertas
             driver.find_element(by=By.XPATH,value='//select[@name="puertas"]').click()
-            driver.find_element(by=By.XPATH,value='//select[@name="puertas"]').send_keys(caracteristicas[7])
+            driver.find_element(by=By.XPATH,value='//select[@name="puertas"]').send_keys(caracteristicas[8])
             driver.find_element(by=By.XPATH,value='//select[@name="puertas"]').click()
             #Año
             driver.find_element(by=By.XPATH,value='//select[@name="yearfrom"]').click()
@@ -43,11 +43,12 @@ class info():
             #Esperando a que salga la trabla de precios
             WebDriverWait(driver, 2000).until(EC.presence_of_element_located((By.XPATH, '(//td[@align="left"])[13]')))
             price = driver.find_element(by=By.XPATH,value='(//td[@align="left"])[13]').get_attribute("innerHTML")
-            time.sleep(8)
-            return cleaning.cleaning.string_to_num(price)
+            price = cleaning.cleaning.string_to_num(price)
+            time.sleep(120)
+            return price
 
 
-    def registro(plate,flag_cl):
+    def registro(plate,flag_cl,flag_c):
             url_registro="https://www.rnpdigital.com/shopping/login.jspx"
             driver=webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()))
             driver.get(url_registro)
@@ -65,12 +66,25 @@ class info():
             #if para seleccionar carga pesada o carga liviana
             if flag_cl=="1":
                 driver.find_element(by=By.XPATH,value='//select[@id="class"]').click()
+                time.sleep(1)
                 driver.find_element(by=By.XPATH,value='//select[@id="class"]').send_keys("cl")
+                time.sleep(1)
                 driver.find_element(by=By.XPATH,value='//select[@id="class"]').click()
+                time.sleep(1)
+            if flag_c=="1":
+                driver.find_element(by=By.XPATH,value='//select[@id="class"]').click()
+                time.sleep(1)
+                driver.find_element(by=By.XPATH,value='//select[@id="class"]').send_keys("c")
+                time.sleep(0.3)
+                driver.find_element(by=By.XPATH,value='//select[@id="class"]').send_keys("c")
+                time.sleep(1)
+                driver.find_element(by=By.XPATH,value='//select[@id="class"]').click()
+                time.sleep(1.5)
             #Digitando los datos del vehiculo
             driver.find_element(by=By.XPATH,value='//input[@id="carNumber"]').send_keys(plate)
             time.sleep(1.2)
             driver.find_element(by=By.XPATH,value='(//a[@onclick])[26]').click()
+            WebDriverWait(driver, 2000).until(EC.presence_of_element_located((By.XPATH, '(//td)[79]')))
             #Adquiriendo los datos de la tabla del registro
             caracteristicas=[]
             caracteristicas.append(driver.find_element(by=By.XPATH,value='(//td)[16]').get_attribute("innerHTML"))#marca
@@ -80,4 +94,5 @@ class info():
             caracteristicas.append(driver.find_element(by=By.XPATH,value='(//td)[28]').get_attribute("innerHTML"))#Carroceria
             caracteristicas.append(driver.find_element(by=By.XPATH,value='(//td)[40]').get_attribute("innerHTML"))#Año
             caracteristicas.append(driver.find_element(by=By.XPATH,value='(//div)[103]').get_attribute("innerHTML"))#dueño
+            caracteristicas.append(driver.find_element(by=By.XPATH,value='(//td)[32]').get_attribute("innerHTML"))#traccion
             return cleaning.cleaning.listhtml(caracteristicas)

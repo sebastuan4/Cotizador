@@ -1,8 +1,10 @@
 import lxml.html
 import lxml.html.clean
 import re
+import colorama
+from colorama import Fore
 class cleaning():
-    def string_to_num(string):
+    def string_to_num(string=""):
         doc = lxml.html.fromstring(string)
         cleaner = lxml.html.clean.Cleaner(style=True)
         doc = cleaner.clean_html(doc)
@@ -10,6 +12,7 @@ class cleaning():
         string=str(text)
         string=string.replace('¢', '')
         string=string.replace(',', '')
+        print(Fore.YELLOW+f"El valor es: {string}")
         return int(string)
 
     def listhtml(lista):
@@ -22,6 +25,7 @@ class cleaning():
             string=str(text)
             lista_lista.append(string)
         lista_lista.append(re.sub("[^0-9]", "", lista[4]))
-        print(f"Los datos son: {lista_lista}")
-        print(f"El dueño es: {lista_lista[6]}")
+        print(Fore.RED+f"Los datos son: {lista_lista}")
+        print(Fore.GREEN+f"El dueño es: {lista_lista[6]}")
+        print("")
         return lista_lista
