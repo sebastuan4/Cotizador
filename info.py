@@ -1,15 +1,16 @@
-from tkinter import *
+from distutils.command.clean import clean
 from selenium import webdriver #Crear navegador
 from selenium.webdriver.edge.service import Service #Aplicar el navegador
 from webdriver_manager.microsoft import EdgeChromiumDriverManager #Navegador
 from selenium.webdriver.common.by import By #Buscado
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import WebDriverException
 import cleaning
 import time
 class info():
-    def crautos(plate,flag_cl,flag_c):
-            caracteristicas=info.registro(plate,flag_cl,flag_c)
+    def crautos(plate,flag_cl,flag_c,flag_rapido):
+            caracteristicas=info.registro(plate,flag_cl,flag_c,flag_rapido)
             url_crautos="https://crautos.com/bluebook/"
             driver=webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()))
             driver.get(url_crautos)
@@ -32,10 +33,6 @@ class info():
             driver.find_element(by=By.XPATH,value='//select[@name="fuel"]').click()
             driver.find_element(by=By.XPATH,value='//select[@name="fuel"]').send_keys(caracteristicas[3])
             driver.find_element(by=By.XPATH,value='//select[@name="fuel"]').click()
-            #Puertas
-            driver.find_element(by=By.XPATH,value='//select[@name="puertas"]').click()
-            driver.find_element(by=By.XPATH,value='//select[@name="puertas"]').send_keys(caracteristicas[8])
-            driver.find_element(by=By.XPATH,value='//select[@name="puertas"]').click()
             #Año
             driver.find_element(by=By.XPATH,value='//select[@name="yearfrom"]').click()
             driver.find_element(by=By.XPATH,value='//select[@name="yearfrom"]').send_keys(caracteristicas[5])
@@ -44,11 +41,19 @@ class info():
             WebDriverWait(driver, 2000).until(EC.presence_of_element_located((By.XPATH, '(//td[@align="left"])[13]')))
             price = driver.find_element(by=By.XPATH,value='(//td[@align="left"])[13]').get_attribute("innerHTML")
             price = cleaning.cleaning.string_to_num(price)
-            time.sleep(120)
-            return price
+            if flag_rapido=="0":
+                infinite=True
+                while infinite:
+                    try:
+                        driver.get_window_size()
+                        time.sleep(0.2)
+                    except WebDriverException:
+                        infinite=False
+            caracteristicas.append(price)
+            return caracteristicas
 
 
-    def registro(plate,flag_cl,flag_c):
+    def registro(plate,flag_cl,flag_c,flag_rapido):
             url_registro="https://www.rnpdigital.com/shopping/login.jspx"
             driver=webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()))
             driver.get(url_registro)
@@ -95,4 +100,30 @@ class info():
             caracteristicas.append(driver.find_element(by=By.XPATH,value='(//td)[40]').get_attribute("innerHTML"))#Año
             caracteristicas.append(driver.find_element(by=By.XPATH,value='(//div)[103]').get_attribute("innerHTML"))#dueño
             caracteristicas.append(driver.find_element(by=By.XPATH,value='(//td)[32]').get_attribute("innerHTML"))#traccion
+            caracteristicas.append(driver.find_element(by=By.XPATH,value='(//td)[34]').get_attribute("innerHTML"))#Peso
+            caracteristicas.append(driver.find_element(by=By.XPATH,value='(//td)[22]').get_attribute("innerHTML"))#Personas
+            if flag_rapido=="0":
+                infinite=True
+                while infinite:
+                    try:
+                        time.sleep(0.2)
+                        driver.get_window_size()
+                    except WebDriverException:
+                        infinite=False
             return cleaning.cleaning.listhtml(caracteristicas)
+    def tse(cedula):
+            url_registro="https://servicioselectorales.tse.go.cr/chc/consulta_cedula.aspx"
+            driver=webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()))
+            driver.get(url_registro)
+            driver.maximize_window()
+            #Llenado de cedula
+            driver.find_element(by=By.XPATH,value='//input[@id="txtcedula"]').click()
+            driver.find_element(by=By.XPATH,value='//input[@id="txtcedula"]').send_keys(cedula)
+            time.sleep(1)
+            driver.find_element(by=By.XPATH,value='//input[@id="btnConsultaCedula"]').click()
+            time.sleep(1)
+            cliente = []
+            cliente.append(driver.find_element(by=By.XPATH,value='//span[@id="lblnombrecompleto"]').get_attribute("innerHTML"))
+            cliente.append(driver.find_element(by=By.XPATH,value='//span[@id="lblfechaNacimiento"]').get_attribute("innerHTML"))
+            return cleaning.cleaning.tsehtml(cliente)
+info.tse(118260556)
