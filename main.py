@@ -20,7 +20,6 @@ class cotizador():
             if flag_registro==0:
                 lista = info.info.registro(plate,flag_cl,flag_c)
             manual.paralelo.cotizar(id,flag_cl,flag_c,price,lista,plate,flag_comercial,tipo_cedula)
-            pass
     
     def UI(self):
         root=Tk()

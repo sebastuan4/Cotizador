@@ -7,6 +7,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import WebDriverException
+import pyautogui
 from joblib import Parallel, delayed
 import info
 import time
@@ -89,7 +91,13 @@ class ins():
         driver.find_element(by=By.XPATH,value='(//a[@class="btn btn-default"])[3]').click()
         driver.find_element(by=By.XPATH,value='//select[@id="LIMITEMINIMOC"]').click()
         driver.find_element(by=By.XPATH,value='//select[@id="LIMITEMINIMOC"]').send_keys("100")
-        time.sleep(2000)
+        infinite=True
+        while infinite:
+            try:
+                driver.get_window_size()
+                time.sleep(0.2)
+            except WebDriverException:
+                infinite=False
 
 class lafise():
     def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
@@ -118,35 +126,42 @@ class lafise():
         driver.find_element(by=By.XPATH,value='//input[@id="cmarca-selectized"]').click()
         driver.find_element(by=By.XPATH,value='//input[@id="cmarca-selectized"]').send_keys(tabla[0])
         driver.find_element(by=By.XPATH,value='//input[@id="cmarca-selectized"]').send_keys(Keys.ENTER)
-        #Uso
-        driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').click()
-        #Condicional Carga
-        if flag_c=="1":
-            driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').send_keys("carga pesada")
-        #Condicional Carga liviana
-        if flag_c=="1" and flag_comercial!="1":
-            driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').send_keys("carga liviana uso pe")
-        elif flag_c=="1" and flag_comercial=="1":
-            driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').send_keys("carga liviana uso com")
-        #Condicional Particular
-        if flag_c!="1" and flag_cl!="1" and flag_comercial!="1":
-            driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').send_keys("particular uso per")
-        elif flag_c!="1" and flag_cl!="1" and flag_comercial=="1":
-            driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').send_keys("particular uso com")
-        driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').send_keys(Keys.ENTER)
         #Modelo
         driver.find_element(by=By.XPATH,value='//input[@id="cmodelo-selectized"]').send_keys(tabla[1])
         driver.find_element(by=By.XPATH,value='//input[@id="cmodelo-selectized"]').send_keys(Keys.ENTER)
         #Año
         driver.find_element(by=By.XPATH,value='//input[@id="auAnio-selectized"]').send_keys(tabla[5])
         driver.find_element(by=By.XPATH,value='//input[@id="auAnio-selectized"]').send_keys(Keys.ENTER)
+        
         #Valor
-        driver.find_element(by=By.XPATH,value='//input[@id="auValorNuevo"]').send_keys(price*100)
+        driver.find_element(by=By.XPATH,value='//input[@id="auValorNuevo"]').send_keys(str(price)+"00")
         driver.find_element(by=By.XPATH,value='//input[@id="auValorNuevo"]').send_keys(Keys.ENTER)
+
         #Deducible
         driver.find_element(by=By.XPATH,value='//input[@id="ideducible-selectized"]').click()
         driver.find_element(by=By.XPATH,value='//input[@id="ideducible-selectized"]').send_keys(300)
         driver.find_element(by=By.XPATH,value='//input[@id="ideducible-selectized"]').send_keys(Keys.ENTER)
+        
+        #Uso 
+        campo_precio = driver.find_element(by=By.XPATH,value='//input[@id="auValorNuevo"]')
+        a.move_to_element(campo_precio).move_by_offset(-350, 0).click().perform()
+        pyautogui.hotkey('backspace')
+        
+        driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').click()
+        #Condicional Carga
+        if flag_c=="1":
+            driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').send_keys("carga pesada")
+        #Condicional Carga liviana
+        if flag_cl=="1" and flag_comercial!="1":
+            driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').send_keys("carga liviana uso pe")
+        elif flag_cl=="1" and flag_comercial=="1":
+            driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').send_keys("liviana uso com")
+        #Condicional Particular
+        if flag_c!="1" and flag_cl!="1" and flag_comercial!="1":
+            driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').send_keys("particular uso per")
+        elif flag_c!="1" and flag_cl!="1" and flag_comercial=="1":
+            driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').send_keys("particular uso com")
+        driver.find_element(by=By.XPATH,value='//input[@id="auUso-selectized"]').send_keys(Keys.ENTER)
         #Coberturas
         driver.find_element(by=By.XPATH,value='(//td[@class="ckbox"])[1]').click()
         driver.find_element(by=By.XPATH,value='(//td[@class="ckbox"])[2]').click()
@@ -158,7 +173,23 @@ class lafise():
         driver.find_element(by=By.XPATH,value='//a[@id="CobSA62"]').click()
         driver.find_element(by=By.XPATH,value='//select[@class="form-control input-sm"]').click()
         driver.find_element(by=By.XPATH,value='//option[@value="50000000"]').click()
-        time.sleep(2000)
+        #Decuento
+        driver.find_element(by=By.XPATH,value='//div[@class="spin-icon"]').click()
+        time.sleep(0.5)
+        driver.find_element(by=By.XPATH,value='//a[@title="Click para agregar descuento"]').click()
+        driver.find_element(by=By.XPATH,value='(//label[@class="form-check-label"])[15]').click()
+        driver.find_element(by=By.XPATH,value='//a[@data-name="desc2"]').click()
+        driver.find_element(by=By.XPATH,value='//input[@class="form-control input-sm"]').clear()
+        driver.find_element(by=By.XPATH,value='//input[@class="form-control input-sm"]').send_keys(35)
+        driver.find_element(by=By.XPATH,value='//input[@class="form-control input-sm"]').send_keys(Keys.ENTER)
+        driver.find_element(by=By.XPATH,value='(//button[@class="btn btn-primary btn-mg-4 waves-effect waves-light"])[1]').click()
+        infinite=True
+        while infinite:
+            try:
+                driver.get_window_size()
+                time.sleep(0.2)
+            except WebDriverException:
+                infinite=False
 
 class qualitas():
     def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
@@ -195,12 +226,16 @@ class qualitas():
         driver.find_element(by=By.XPATH,value='//input[@id="sumaAsegurada"]').click()
         driver.find_element(by=By.XPATH,value='//input[@id="sumaAsegurada"]').clear()
         driver.find_element(by=By.XPATH,value='//input[@id="sumaAsegurada"]').send_keys(price)
-        time.sleep(2000)
+        infinite=True
+        while infinite:
+            try:
+                driver.get_window_size()
+                time.sleep(0.2)
+            except WebDriverException:
+                infinite=False
 
 class oceanica():
     def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
-        if tipo_cedula=="Cédula física":
-            cliente=info.info.tse(id)
         url_oceanica="http://portal.oceanica-cr.com/oceanicaweb/"
         driver=webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()))
         driver.get(url_oceanica)
@@ -238,6 +273,7 @@ class oceanica():
         driver.find_element(by=By.XPATH,value='//input[@id="iMontoFactura"]').click()
         driver.find_element(by=By.XPATH,value='//input[@id="iMontoFactura"]').send_keys(price)
         if tipo_cedula=="Cédula física":
+            cliente=info.info.tse(id)
             #Fecha de nacimiento
             driver.find_element(by=By.XPATH,value='//input[@id="iFechaNacimiento"]').click()
             driver.find_element(by=By.XPATH,value='//input[@id="iFechaNacimiento"]').send_keys(cliente[0])
@@ -264,7 +300,13 @@ class oceanica():
         driver.find_element(by=By.XPATH,value='//select[@id="solTipoid"]').click()
         driver.find_element(by=By.XPATH,value='//select[@id="solTipoid"]').send_keys(tipo_cedula)
         driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys(Keys.ENTER)
-        time.sleep(2000)
+        infinite=True
+        while infinite:
+            try:
+                driver.get_window_size()
+                time.sleep(0.2)
+            except WebDriverException:
+                infinite=False
         
 class paralelo():
     def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
@@ -272,6 +314,6 @@ class paralelo():
         Parallel(n_jobs=-1)(delayed(i.cotizar)(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula)for i in clases)
 
 
+tabla = ['HYUNDAI', 'HD 45', '2600 ', 'DIESEL', 'CAJA CERRADA O FURGON4X2', '2013', 'LABORATORIOS QUIMICOS ARVI SOCIEDAD ANONIMA ', '4X2', '4500', '3']
+lafise.cotizar("3101406682","1",'0',4600000,tabla,"wtf003","1","Cédula juridíca")
 
-tabla = ['NISSAN', 'TIIDA', '1798 ', 'GASOLINA', 'SEDAN   HATCHBACK4X2', '2012', 'SENAJUUNO NUEVE CERO TRES SOCIEDAD ANONIMA ', '4X2', '1588', '5']
-ins.cotizar("3101406682","0",'0',4600000,tabla,"wtf003","0","Cédula juridíca")

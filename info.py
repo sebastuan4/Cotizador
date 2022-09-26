@@ -1,11 +1,9 @@
-from distutils.command.clean import clean
 from selenium import webdriver #Crear navegador
 from selenium.webdriver.edge.service import Service #Aplicar el navegador
 from webdriver_manager.microsoft import EdgeChromiumDriverManager #Navegador
 from selenium.webdriver.common.by import By #Buscado
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import WebDriverException
 import pyautogui
 import cleaning
 import time
@@ -47,10 +45,10 @@ class info():
             pyautogui.hotkey('ctrl','p')
             time.sleep(2)
             pyautogui.hotkey('enter')
-            time.sleep(2)
+            time.sleep(4)
             pyautogui.typewrite(f"{plate}_CrAutos.pdf")
             pyautogui.hotkey('enter')
-            time.sleep(2)
+            time.sleep(3)
             return caracteristicas
 
 
@@ -106,10 +104,10 @@ class info():
             pyautogui.hotkey('ctrl','p')
             time.sleep(2)
             pyautogui.hotkey('enter')
-            time.sleep(2)
+            time.sleep(4)
             pyautogui.typewrite(f"{plate}_Registro.pdf")
             pyautogui.hotkey('enter')
-            time.sleep(2)
+            time.sleep(3)
             return cleaning.cleaning.listhtml(caracteristicas)
 
     def tse(cedula):
