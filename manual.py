@@ -12,7 +12,7 @@ import info
 import time
 
 class ins():
-    def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial):
+    def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
         url_ins="https://cotiza.ins-cr.com/frmLogin.aspx"
         driver=webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()))
         driver.get(url_ins)
@@ -32,11 +32,22 @@ class ins():
         a.move_to_element(autos).perform()
         autos.click()
         time.sleep(4)
+        #Tipo de cedula
+        if tipo_cedula=="Dimex":
+            tipo_cedula="Documento Migratorio"
+        if tipo_cedula=="Carné diplomático":
+            tipo_cedula="d"
+        if tipo_cedula=="Cédula juridíca":
+            tipo_cedula="Cédula Persona Juridíca"
+        driver.find_element(by=By.XPATH,value='//select[@id="TIPOIDCLI"]').click()
+        driver.find_element(by=By.XPATH,value='//select[@id="TIPOIDCLI"]').send_keys(tipo_cedula)
+        driver.find_element(by=By.XPATH,value='//select[@id="TIPOIDCLI"]').send_keys(Keys.ENTER)
         #Llenado de cedula
         driver.find_element(by=By.XPATH,value='//input[@name="ctl00$INSContent$ctrDinamico$IDENTCLI$ctl04"]').send_keys(id)
         driver.find_element(by=By.XPATH,value='//a[@id="lnkIDENTCLI"]').click()
-        time.sleep(1)
-        driver.find_element(by=By.XPATH,value='//input[@id="INSContent_ctrDinamico_btnAvanzar"]').click()
+        
+        #driver.find_element(by=By.XPATH,value='//input[@id="INSContent_ctrDinamico_btnAvanzar"]').click()
+
         #Esperando que salga la parte de cotizar
         WebDriverWait(driver, 2000).until(EC.presence_of_element_located((By.XPATH, '//select[@id="CLASEPLACARSGO"]')))
         #LLenando tipo de placa
@@ -81,7 +92,7 @@ class ins():
         time.sleep(2000)
 
 class lafise():
-    def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial):
+    def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
         url_lafise="https://appscr.seguroslafise.com/cotizador_de_seguros/automovil"
         driver=webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()))
         driver.get(url_lafise)
@@ -136,17 +147,21 @@ class lafise():
         driver.find_element(by=By.XPATH,value='//input[@id="ideducible-selectized"]').click()
         driver.find_element(by=By.XPATH,value='//input[@id="ideducible-selectized"]').send_keys(300)
         driver.find_element(by=By.XPATH,value='//input[@id="ideducible-selectized"]').send_keys(Keys.ENTER)
-        #Coberturaas
+        #Coberturas
         driver.find_element(by=By.XPATH,value='(//td[@class="ckbox"])[1]').click()
         driver.find_element(by=By.XPATH,value='(//td[@class="ckbox"])[2]').click()
         driver.find_element(by=By.XPATH,value='(//td[@class="ckbox"])[3]').click()
         driver.find_element(by=By.XPATH,value='(//td[@class="ckbox"])[7]').click()
         driver.find_element(by=By.XPATH,value='(//td[@class="ckbox"])[8]').click()
         driver.find_element(by=By.XPATH,value='(//td[@class="ckbox"])[11]').click()
+        #Modificando cobertura B
+        driver.find_element(by=By.XPATH,value='//a[@id="CobSA62"]').click()
+        driver.find_element(by=By.XPATH,value='//select[@class="form-control input-sm"]').click()
+        driver.find_element(by=By.XPATH,value='//option[@value="50000000"]').click()
         time.sleep(2000)
 
 class qualitas():
-    def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial):
+    def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
         url_qualitas="https://www.qualitas.co.cr/web/qcr/acceso-agentes"
         driver=webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()))
         driver.get(url_qualitas)
@@ -161,11 +176,31 @@ class qualitas():
         driver.find_element(by=By.XPATH,value='//input[@name="_58_password"]').click()
         driver.find_element(by=By.XPATH,value='//input[@name="_58_password"]').send_keys('CONFIA')
         driver.find_element(by=By.XPATH,value='//button[@class="btn btn-modificado btn-modificado_2"]').click()
+        #Entrando al cotizador
+        driver.find_element(by=By.XPATH,value='//a[@href="https://www.qualitas.co.cr/group/qcr/cotizador"]').click()
+        #Marca
+        driver.find_element(by=By.XPATH,value='//select[@id="marca"]').click()
+        driver.find_element(by=By.XPATH,value='//select[@id="marca"]').send_keys(tabla[0])
+        driver.find_element(by=By.XPATH,value='//select[@id="marca"]').send_keys(Keys.ENTER)
+        #Tipo
+        driver.find_element(by=By.XPATH,value='//select[@id="tipo"]').click()
+        driver.find_element(by=By.XPATH,value='//select[@id="tipo"]').send_keys(tabla[1])
+        driver.find_element(by=By.XPATH,value='//select[@id="tipo"]').send_keys(Keys.ENTER)
+        #Modelo/año 
+        driver.find_element(by=By.XPATH,value='//select[@id="modelo"]').click()
+        driver.find_element(by=By.XPATH,value='//select[@id="modelo"]').send_keys(tabla[5])
+        driver.find_element(by=By.XPATH,value='//select[@id="modelo"]').send_keys(Keys.ENTER)
+        #Monto asegurado
+        time.sleep(2.5)
+        driver.find_element(by=By.XPATH,value='//input[@id="sumaAsegurada"]').click()
+        driver.find_element(by=By.XPATH,value='//input[@id="sumaAsegurada"]').clear()
+        driver.find_element(by=By.XPATH,value='//input[@id="sumaAsegurada"]').send_keys(price)
         time.sleep(2000)
 
 class oceanica():
-    def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial):
-        cliente=info.info.tse(id)
+    def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
+        if tipo_cedula=="Cédula física":
+            cliente=info.info.tse(id)
         url_oceanica="http://portal.oceanica-cr.com/oceanicaweb/"
         driver=webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()))
         driver.get(url_oceanica)
@@ -193,31 +228,50 @@ class oceanica():
         driver.find_element(by=By.XPATH,value='//select[@id="sMarca"]').send_keys(tabla[0])
         driver.find_element(by=By.XPATH,value='//select[@id="sMarca"]').send_keys(Keys.ENTER)
         #Modelo
-        driver.find_element(by=By.XPATH,value='//select[id="sModelo"]').click()
-        driver.find_element(by=By.XPATH,value='//select[id="sModelo"]').send_keys(tabla[1])
-        driver.find_element(by=By.XPATH,value='//select[id="sModelo"]').send_keys(Keys.ENTER)
+        driver.find_element(by=By.XPATH,value='//select[@id="sModelo"]').click()
+        driver.find_element(by=By.XPATH,value='//select[@id="sModelo"]').send_keys(tabla[1])
+        driver.find_element(by=By.XPATH,value='//select[@id="sModelo"]').send_keys(Keys.ENTER)
         #Año
         driver.find_element(by=By.XPATH,value='//input[@id="iAnio"]').click()
         driver.find_element(by=By.XPATH,value='//input[@id="iAnio"]').send_keys(tabla[5])
-        time.sleep(2000)
         #Monto
-        driver.find_element(by=By.XPATH,value='//input[id="iMontoFactura"]').click()
-        driver.find_element(by=By.XPATH,value='//input[id="iMontoFactura"]').send_keys(tabla[5])
+        driver.find_element(by=By.XPATH,value='//input[@id="iMontoFactura"]').click()
+        driver.find_element(by=By.XPATH,value='//input[@id="iMontoFactura"]').send_keys(price)
+        if tipo_cedula=="Cédula física":
+            #Fecha de nacimiento
+            driver.find_element(by=By.XPATH,value='//input[@id="iFechaNacimiento"]').click()
+            driver.find_element(by=By.XPATH,value='//input[@id="iFechaNacimiento"]').send_keys(cliente[0])
+            #Apellido
+            driver.find_element(by=By.XPATH,value='//input[@id="iApellido"]').click()
+            driver.find_element(by=By.XPATH,value='//input[@id="iApellido"]').send_keys(cliente[-2]," ",cliente[-1])
+            #Nombre
+            nombre=""
+            for i in range(1,len(cliente)-2,1):
+                nombre+=str(cliente[i])+" "
+            driver.find_element(by=By.XPATH,value='//input[@id="iNombre"]').click()
+            driver.find_element(by=By.XPATH,value='//input[@id="iNombre"]').send_keys(nombre)
+        #Cedula
+        driver.find_element(by=By.XPATH,value='//input[@id="solNumid"]').click()
+        driver.find_element(by=By.XPATH,value='//input[@id="solNumid"]').send_keys(id)
+        #Uso
+        driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').click()
+        if flag_comercial!="1": 
+            driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys("Personal")
+        else:
+            driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys("Comercial")
+        driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys(Keys.ENTER)
+        #Tipo de id
+        driver.find_element(by=By.XPATH,value='//select[@id="solTipoid"]').click()
+        driver.find_element(by=By.XPATH,value='//select[@id="solTipoid"]').send_keys(tipo_cedula)
+        driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys(Keys.ENTER)
+        time.sleep(2000)
         
-        
-#[ins,lafise,qualitas]
 class paralelo():
-    def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial):
-        clases = [ins,qualitas,lafise,oceanica]
-        Parallel(n_jobs=-1)(delayed(i.cotizar)(id,flag_cl,flag_c,price,tabla,plate,flag_comercial)for i in clases)
+    def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
+        clases = [ins,qualitas,oceanica,lafise]
+        Parallel(n_jobs=-1)(delayed(i.cotizar)(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula)for i in clases)
+
+
 
 tabla = ['NISSAN', 'TIIDA', '1798 ', 'GASOLINA', 'SEDAN   HATCHBACK4X2', '2012', 'SENAJUUNO NUEVE CERO TRES SOCIEDAD ANONIMA ', '4X2', '1588', '5']
-oceanica.cotizar("110650128","0",'0',4600000,tabla,"wtf003","0")
-
-
-
-
-
-        
-
-        
+ins.cotizar("3101406682","0",'0',4600000,tabla,"wtf003","0","Cédula juridíca")

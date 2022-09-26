@@ -1,7 +1,6 @@
 import lxml.html
 import lxml.html.clean
 import re
-import colorama
 from colorama import Fore
 class cleaning():
     def string_to_num(string=""):
@@ -39,6 +38,17 @@ class cleaning():
         print("")
         return cleaning.listregex(lista_lista)
 
+    def tseformato(cliente):
+            cliente=list(cliente)
+            clienteDatos=[]
+            name = str(cliente[0]).split()
+            nacimiento=cliente[1]
+            clienteDatos.append(nacimiento)
+            for palabras in name:
+                clienteDatos.append(palabras)
+            print(Fore.RED+f"Los datos son: {clienteDatos}")
+            return clienteDatos
+
     def tsehtml(cliente):
         cliente_listo=[]
         for string in cliente:
@@ -49,4 +59,4 @@ class cleaning():
             string=str(text)
             cliente_listo.append(string)
         print(Fore.GREEN+f"Los datos son: {cliente_listo}")
-        return cliente_listo
+        return cleaning.tseformato(cliente_listo)
