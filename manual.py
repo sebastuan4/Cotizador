@@ -91,13 +91,12 @@ class ins():
         driver.find_element(by=By.XPATH,value='(//a[@class="btn btn-default"])[3]').click()
         driver.find_element(by=By.XPATH,value='//select[@id="LIMITEMINIMOC"]').click()
         driver.find_element(by=By.XPATH,value='//select[@id="LIMITEMINIMOC"]').send_keys("100")
-        infinite=True
-        while infinite:
+        while True:
             try:
                 driver.get_window_size()
                 time.sleep(0.2)
             except WebDriverException:
-                infinite=False
+                break
 
 class lafise():
     def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
@@ -183,13 +182,12 @@ class lafise():
         driver.find_element(by=By.XPATH,value='//input[@class="form-control input-sm"]').send_keys(35)
         driver.find_element(by=By.XPATH,value='//input[@class="form-control input-sm"]').send_keys(Keys.ENTER)
         driver.find_element(by=By.XPATH,value='(//button[@class="btn btn-primary btn-mg-4 waves-effect waves-light"])[1]').click()
-        infinite=True
-        while infinite:
+        while True:
             try:
                 driver.get_window_size()
                 time.sleep(0.2)
             except WebDriverException:
-                infinite=False
+                break
 
 class qualitas():
     def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
@@ -226,13 +224,12 @@ class qualitas():
         driver.find_element(by=By.XPATH,value='//input[@id="sumaAsegurada"]').click()
         driver.find_element(by=By.XPATH,value='//input[@id="sumaAsegurada"]').clear()
         driver.find_element(by=By.XPATH,value='//input[@id="sumaAsegurada"]').send_keys(price)
-        infinite=True
-        while infinite:
+        while True:
             try:
                 driver.get_window_size()
                 time.sleep(0.2)
             except WebDriverException:
-                infinite=False
+                break
 
 class oceanica():
     def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
@@ -300,13 +297,34 @@ class oceanica():
         driver.find_element(by=By.XPATH,value='//select[@id="solTipoid"]').click()
         driver.find_element(by=By.XPATH,value='//select[@id="solTipoid"]').send_keys(tipo_cedula)
         driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys(Keys.ENTER)
-        infinite=True
-        while infinite:
+        WebDriverWait(driver, 20000).until(EC.presence_of_element_located((By.XPATH, '//select[@id="rango-500-009-COA3"]')))
+        move=driver.find_element(by=By.XPATH,value='//select[@id="rango-500-009-COA3"]')
+        a.move_to_element(move)
+        try:
+            driver.find_element(by=By.XPATH,value='//select[@id="rango-500-009-COA3"]').click()
+            driver.find_element(by=By.XPATH,value='//select[@id="rango-500-009-COA3"]').send_keys(240)
+            driver.find_element(by=By.XPATH,value='//select[@id="rango-500-043-COA3"]').click()
+            driver.find_element(by=By.XPATH,value='//select[@id="rango-500-043-COA3"]').send_keys(240)
+            driver.find_element(by=By.XPATH,value='//select[@id="rango-500-044-COA3"]').click()
+            driver.find_element(by=By.XPATH,value='//select[@id="rango-500-044-COA3"]').send_keys(240)
+            driver.find_element(by=By.XPATH,value='//select[@id="rango-500-044-COA3"]').click()
+            driver.find_element(by=By.XPATH,value='//select[@id="rango-500-044-COA3"]').send_keys(240)
+        except:
+            pass
+        try:
+            driver.find_element(by=By.XPATH,value='//a[@id="gd-dedu-500-009"]').click()
+            driver.find_element(by=By.XPATH,value='//a[@id="gd-dedu-500-043"]').click()
+            driver.find_element(by=By.XPATH,value='//a[@id="gd-dedu-500-044""]').click()
+            driver.find_element(by=By.XPATH,value='//a[@id="rango-500-009-COA3"]').click()
+        except:
+            pass
+
+        while True:
             try:
                 driver.get_window_size()
                 time.sleep(0.2)
             except WebDriverException:
-                infinite=False
+                break
         
 class paralelo():
     def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
@@ -315,5 +333,5 @@ class paralelo():
 
 
 tabla = ['HYUNDAI', 'HD 45', '2600 ', 'DIESEL', 'CAJA CERRADA O FURGON4X2', '2013', 'LABORATORIOS QUIMICOS ARVI SOCIEDAD ANONIMA ', '4X2', '4500', '3']
-lafise.cotizar("3101406682","1",'0',4600000,tabla,"wtf003","1","Cédula juridíca")
+oceanica.cotizar("3101406682","1",'0',4600000,tabla,"wtf003","1","Cédula juridíca")
 
