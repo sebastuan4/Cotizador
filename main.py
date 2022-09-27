@@ -24,10 +24,11 @@ class cotizador():
     def UI(self):
         root=Tk()
         global price_global
+        #Visuales
+        root.title("Cotizador")
+        root.geometry("250x360")
 
-        txt_id=Entry(root)
-        txt_plate=Entry(root)
-        txt_price=Entry(root)
+
         flag_coseg=StringVar()
         flag_cl=StringVar()
         flag_c=StringVar()
@@ -36,6 +37,9 @@ class cotizador():
         vlist = ["Carné diplomático", "Cédula de residencia", "Cédula física",
           "Cédula juridíca", "Dimex","Empresa extranjera","Nite","Pasaporte","Cédula Jurídica Gobierno Central","Cédula Institución Autónoma"]
 
+        txt_id=Entry(root)
+        txt_plate=Entry(root)
+        txt_price=Entry(root)
         chk_coseg=Checkbutton(root,text="Coseg",variable=flag_coseg, onvalue=1,offvalue=0)
         chk_cl=Checkbutton(root,text="CL",variable=flag_cl, onvalue=1,offvalue=0)
         chk_c=Checkbutton(root,text="C",variable=flag_c, onvalue=1,offvalue=0)

@@ -269,6 +269,14 @@ class oceanica():
         #Monto
         driver.find_element(by=By.XPATH,value='//input[@id="iMontoFactura"]').click()
         driver.find_element(by=By.XPATH,value='//input[@id="iMontoFactura"]').send_keys(price)
+        #Cedula
+        driver.find_element(by=By.XPATH,value='//input[@id="solNumid"]').click()
+        driver.find_element(by=By.XPATH,value='//input[@id="solNumid"]').send_keys(id)
+        #Tipo de id
+        driver.find_element(by=By.XPATH,value='//select[@id="solTipoid"]').click()
+        driver.find_element(by=By.XPATH,value='//select[@id="solTipoid"]').send_keys(tipo_cedula)
+        driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys(Keys.ENTER)
+        #Datos del cliente
         if tipo_cedula=="Cédula física":
             cliente=info.info.tse(id)
             #Fecha de nacimiento
@@ -283,19 +291,12 @@ class oceanica():
                 nombre+=str(cliente[i])+" "
             driver.find_element(by=By.XPATH,value='//input[@id="iNombre"]').click()
             driver.find_element(by=By.XPATH,value='//input[@id="iNombre"]').send_keys(nombre)
-        #Cedula
-        driver.find_element(by=By.XPATH,value='//input[@id="solNumid"]').click()
-        driver.find_element(by=By.XPATH,value='//input[@id="solNumid"]').send_keys(id)
         #Uso
         driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').click()
         if flag_comercial!="1": 
             driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys("Personal")
         else:
             driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys("Comercial")
-        driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys(Keys.ENTER)
-        #Tipo de id
-        driver.find_element(by=By.XPATH,value='//select[@id="solTipoid"]').click()
-        driver.find_element(by=By.XPATH,value='//select[@id="solTipoid"]').send_keys(tipo_cedula)
         driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys(Keys.ENTER)
         WebDriverWait(driver, 20000).until(EC.presence_of_element_located((By.XPATH, '//select[@id="rango-500-009-COA3"]')))
         move=driver.find_element(by=By.XPATH,value='//select[@id="rango-500-009-COA3"]')
@@ -328,10 +329,11 @@ class oceanica():
         
 class paralelo():
     def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
-        clases = [ins,qualitas,oceanica,lafise]
-        Parallel(n_jobs=-1)(delayed(i.cotizar)(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula)for i in clases)
+        try:
+            clases = [ins,qualitas,oceanica,lafise]
+            Parallel(n_jobs=-1)(delayed(i.cotizar)(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula)for i in clases)
+        except WebDriverException:
+            print("Webdriver")
 
 
-tabla = ['HYUNDAI', 'HD 45', '2600 ', 'DIESEL', 'CAJA CERRADA O FURGON4X2', '2013', 'LABORATORIOS QUIMICOS ARVI SOCIEDAD ANONIMA ', '4X2', '4500', '3']
-oceanica.cotizar("3101406682","1",'0',4600000,tabla,"wtf003","1","Cédula juridíca")
 

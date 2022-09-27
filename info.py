@@ -7,6 +7,17 @@ from selenium.webdriver.support.ui import WebDriverWait
 import pyautogui
 import cleaning
 import time
+import os
+
+def descargas():
+    if os.name == 'nt':
+        import winreg
+        sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
+        downloads_guid = '{374DE290-123F-4565-9164-39C4925E467B}'
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, sub_key) as key:
+            location = winreg.QueryValueEx(key, downloads_guid)[0]
+        return location
+
 class info():
     def crautos(plate,flag_cl,flag_c):
             caracteristicas=info.registro(plate,flag_cl,flag_c)
@@ -45,8 +56,9 @@ class info():
             pyautogui.hotkey('ctrl','p')
             time.sleep(2)
             pyautogui.hotkey('enter')
-            time.sleep(4)
-            pyautogui.typewrite(f"{plate}_CrAutos.pdf")
+            time.sleep(1)
+            pyautogui.typewrite(f"{descargas()}\{plate}_CrAutos.pdf")
+            time.sleep(1)
             pyautogui.hotkey('enter')
             time.sleep(3)
             return caracteristicas
@@ -104,8 +116,9 @@ class info():
             pyautogui.hotkey('ctrl','p')
             time.sleep(2)
             pyautogui.hotkey('enter')
-            time.sleep(4)
-            pyautogui.typewrite(f"{plate}_Registro.pdf")
+            time.sleep(1)
+            pyautogui.typewrite(f"{descargas()}\{plate}_Registro.pdf")
+            time.sleep(1)
             pyautogui.hotkey('enter')
             time.sleep(3)
             return cleaning.cleaning.listhtml(caracteristicas)
