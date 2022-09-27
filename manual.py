@@ -1,3 +1,5 @@
+import multiprocessing
+from multiprocessing.dummy import freeze_support
 from tkinter import *
 from selenium import webdriver #Crear navegador
 from selenium.webdriver.edge.service import Service #Aplicar el navegador
@@ -10,6 +12,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import WebDriverException
 import pyautogui
 from joblib import Parallel, delayed
+import multiprocessing
 import info
 import time
 
@@ -329,9 +332,10 @@ class oceanica():
         
 class paralelo():
     def cotizar(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula):
+        multiprocessing.freeze_support()
         try:
             clases = [ins,qualitas,oceanica,lafise]
-            Parallel(n_jobs=-1)(delayed(i.cotizar)(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula)for i in clases)
+            Parallel(n_jobs=-1,backend='threading')(delayed(i.cotizar)(id,flag_cl,flag_c,price,tabla,plate,flag_comercial,tipo_cedula)for i in clases)
         except WebDriverException:
             print("Webdriver")
 
