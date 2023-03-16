@@ -25,8 +25,8 @@ class ins():
         a=ActionChains(driver)
         time.sleep(1)
         #Logueo
-        driver.find_element(by=By.XPATH,value='//input[@id="txtUsuario"]').send_keys("110650128")
-        driver.find_element(by=By.XPATH,value='//input[@id="txtPassword"]').send_keys("Ivaalo3004")
+        driver.find_element(by=By.XPATH,value='//input[@id="txtUsuario"]').send_keys("")
+        driver.find_element(by=By.XPATH,value='//input[@id="txtPassword"]').send_keys("")
         driver.find_element(by=By.XPATH,value='//button[@id="INSContent_btnIngresar"]').click()
         time.sleep(5)
         #Dropdown
@@ -202,9 +202,9 @@ class qualitas():
         time.sleep(1)
         #Login
         driver.find_element(by=By.XPATH,value='//input[@name="_58_clave"]').click()
-        driver.find_element(by=By.XPATH,value='//input[@name="_58_clave"]').send_keys(2)
+        driver.find_element(by=By.XPATH,value='//input[@name="_58_clave"]').send_keys()
         driver.find_element(by=By.XPATH,value='//input[@name="_58_loginn"]').click()
-        driver.find_element(by=By.XPATH,value='//input[@name="_58_loginn"]').send_keys('Comercial')
+        driver.find_element(by=By.XPATH,value='//input[@name="_58_loginn"]').send_keys('')
         driver.find_element(by=By.XPATH,value='//input[@name="_58_password"]').click()
         driver.find_element(by=By.XPATH,value='//input[@name="_58_password"]').send_keys('CONFIA')
         driver.find_element(by=By.XPATH,value='//button[@class="btn btn-modificado btn-modificado_2"]').click()
@@ -243,9 +243,9 @@ class oceanica():
         a=ActionChains(driver)
         #Login
         driver.find_element(by=By.XPATH,value='//input[@id="username"]').click()
-        driver.find_element(by=By.XPATH,value='//input[@id="username"]').send_keys('CO-000031')
+        driver.find_element(by=By.XPATH,value='//input[@id="username"]').send_keys('')
         driver.find_element(by=By.XPATH,value='//input[@id="password"]').click()
-        driver.find_element(by=By.XPATH,value='//input[@id="password"]').send_keys('SQJDrxPE')
+        driver.find_element(by=By.XPATH,value='//input[@id="password"]').send_keys('')
         driver.find_element(by=By.XPATH,value='//button[@type="submit"]').click()
         #Seleccion de la poliza
         time.sleep(1)
@@ -297,9 +297,9 @@ class oceanica():
         #Uso
         driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').click()
         if flag_comercial!="1": 
-            driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys("Personal")
+            driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys("")
         else:
-            driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys("Comercial")
+            driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys("")
         driver.find_element(by=By.XPATH,value='//select[@id="sUso"]').send_keys(Keys.ENTER)
         WebDriverWait(driver, 20000).until(EC.presence_of_element_located((By.XPATH, '//select[@id="rango-500-009-COA3"]')))
         move=driver.find_element(by=By.XPATH,value='//select[@id="rango-500-009-COA3"]')
